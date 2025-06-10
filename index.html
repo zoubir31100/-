@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <title>تحديد الموقع الجغرافي</title>
+</head>
+<body style="font-family: Arial, sans-serif; direction: rtl; padding: 20px;">
+
+  <h2>اضغط الزر لمعرفة موقعك</h2>
+  <button onclick="getLocation()" style="padding:10px 20px; font-size:16px;">احصل على موقعي</button>
+
+  <p id="status" style="margin-top: 20px;"></p>
+  <p id="coords" style="font-weight: bold;"></p>
+
+  <script>
+    function getLocation() {
+      const status = document.getElementById('status');
+      const coords = document.getElementById('coords');
+
+      if (!navigator.geolocation) {
+        status.textContent = 'المتصفح لا يدعم تحديد الموقع.';
+        return;
+      }
+
+      status.textContent = 'جاري الحصول على الموقع...';
+
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+          status.textContent = 'تم الحصول على الموقع!';
+          coords.textContent = `خط العرض: ${lat}، خط الطول: ${lon}`;
+
+          // هنا يمكن إرسال البيانات إلى سيرفر عبر fetch أو XMLHttpRequest إذا أردت
+          // مثال: إرسال البيانات إلى API في n8n
+          /*
+          fetch('https://your-server-url.com/save-location', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ latitude: lat, longitude: lon })
+          })
+          .then(response => response.json())
+          .then(data => console.log(data))
+          .catch(error => console.error(error));
+          */
+        },
+        () => {
+          status.textContent = 'تعذّر الحصول على الموقع، يرجى السماح بالوصول.';
+          coords.textContent = '';
+        }
+      );
+    }
+  </script>
+
+</body>
+</html>
